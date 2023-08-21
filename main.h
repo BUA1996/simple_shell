@@ -11,5 +11,6 @@
 #define MAX_INPUT_SIZE 256
 
 int main(void);
+void parseCommandLine(char *input, char **command, char *arguments[]);
 
 #endif

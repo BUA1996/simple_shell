@@ -9,8 +9,6 @@
 int main(void)
 {
 	pid_t child;
-	int num;
-	char *arg;
 	char *command;
 	char *argv[MAX_INPUT_SIZE];
 
@@ -26,7 +24,7 @@ int main(void)
 
 		input[strcspn(input, "\n")] = '\0';
 
-		command = strtok(input, " ");
+		parseCommandLine(input, &command, argv);
 
 		if (command == NULL)
 		{
@@ -34,18 +32,7 @@ int main(void)
 		}
 
 		argv[0] = command;
-
-		num = 1;
-		arg = strtok(NULL, " ");
-
-		while (arg != NULL)
-		{
-			argv[num] = arg;
-			arg = strtok(NULL, " ");
-			num++;
-		}
-
-		argv[num] = NULL;
+		argv[1] = NULL;
 
 		child = fork();
 		if (child == -1)
