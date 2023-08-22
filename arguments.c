@@ -1,5 +1,12 @@
 #include "main.h"
 
+/**
+ * parseCommandLine - function for parsing input
+ * @input - user input
+ * @command - pointer to store extracted command
+ * @arguments - array to store extracted arguments
+ */
+
 void parseCommandLine(char *input, char **command, char *arguments[])
 {
 	char *arg;
