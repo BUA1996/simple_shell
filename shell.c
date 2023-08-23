@@ -1,5 +1,6 @@
 #include "main.h"
 
+int path(char *command, char *fullPath, size_t bufSize);
 /**
  * main - funstion that immitates thompson shell functionality
  * @child - name of the child process
@@ -11,6 +12,7 @@ int main(void)
 	pid_t child;
 	char *command;
 	char *argv[MAX_INPUT_SIZE];
+	char fullPath[MAX_INPUT_SIZE];
 
 	while (1)
 	{
@@ -31,27 +33,39 @@ int main(void)
 			continue;
 		}
 
-		argv[0] = command;
-		argv[1] = NULL;
+		if (path(command, fullPath, sizeof(fullPath)))
+		{
+			argv[0] = fullPath;
+			argv[1] = NULL;
 
-		child = fork();
-		if (child == -1)
-		{
-			perror("fork");
-		}
-		else if (child == 0)
-		{
-			if (execve(command, argv, NULL) == -1)
+			child = fork();
+			if (child == -1)
 			{
+				perror("fork");
+			}
+			else if (child == 0)
+			{
+				execve(fullPath, argv, NULL);
 				perror("execve");
-				exit(1);
+				_exit(EXIT_FAILURE);
+			}
+			else
+			{
+				int status;
+
+				while (waitpid(child, &status, 0) != child)
+				{
+					if (errno != EINTR)
+					{
+						perror("waitpid");
+						break;
+					}
+				}
 			}
 		}
 		else
 		{
-			int status;
-
-			waitpid(child, &status, 0);
+			printf("command not found: %s\n", command);
 		}
 	}
 	return (0);
