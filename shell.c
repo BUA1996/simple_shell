@@ -46,6 +46,7 @@ int main(void)
 			}
 			else if (child == 0)
 			{
+				printf("patth: %s\n", fullPath);
 				execve(fullPath, argv, NULL);
 				perror("execve");
 				_exit(EXIT_FAILURE);
@@ -68,6 +69,6 @@ int main(void)
 		{
 			printf("command not found: %s\n", command);
 		}
-	}
+}
 	return (0);
 }
