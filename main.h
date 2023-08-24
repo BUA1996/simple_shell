@@ -12,5 +12,6 @@
 #define MAX_INPUT_SIZE 256
 
 void run_shell(void);
+void print(const char *string);
 
 #endif

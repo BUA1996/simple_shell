@@ -43,7 +43,7 @@ void run_shell(void)
 
 	while (1)
 	{
-		printf("($) ");
+		print("($) ");
 		fflush(stdout);
 
 	if (fgets(command, sizeof(command), stdin) == NULL)
