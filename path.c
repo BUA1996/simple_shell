@@ -6,7 +6,7 @@
  * @command: command to search for
  * @fullPath: a buffer to store the full path
  * @bufSize: size of the buffer
- * @return: returns 1 on success
+ * Return: returns 1 on success
  */
 
 int path(char *command, char *fullPath, size_t bufSize)

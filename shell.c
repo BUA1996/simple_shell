@@ -5,6 +5,7 @@ int path(char *command, char *fullPath, size_t bufSize);
  * main - function that immitates thompson shell functionality
  * @child: name of the child process
  * @input: takes in user input command
+ * Return: ....
  */
 
 int main(void)
