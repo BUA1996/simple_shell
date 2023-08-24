@@ -1,74 +1,51 @@
 #include "main.h"
 
-int path(char *command, char *fullPath, size_t bufSize);
-/**
- * main - function that immitates thompson shell functionality
- * @child: name of the child process
- * @input: takes in user input command
- * Return: ....
- */
+#define MAX_COMMAND_LENGTH 1024
+#define MAX_ARGUMENTS 32
 
-int main(void)
-{
-	pid_t child;
-	char *command;
-	char *argv[MAX_INPUT_SIZE];
-	char fullPath[MAX_INPUT_SIZE];
+void execute_command(char *command) {
+    char *args[MAX_ARGUMENTS];
+    char *token;
+    int arg_count = 0;
 
-	while (1)
-	{
-		char input[MAX_INPUT_SIZE];
+    token = strtok(command, " ");
+    while (token != NULL && arg_count < MAX_ARGUMENTS - 1) {
+        args[arg_count] = token;
+        arg_count++;
+        token = strtok(NULL, " ");
+    }
+    args[arg_count] = NULL;
 
-		printf("$ ");
-		if (fgets(input, sizeof(input), stdin) == NULL)
-		{
-			break;
-		}
-
-		input[strcspn(input, "\n")] = '\0';
-
-		parseCommandLine(input, &command, argv);
-
-		if (command == NULL)
-		{
-			continue;
-		}
-
-		if (path(command, fullPath, sizeof(fullPath)))
-		{
-			argv[0] = fullPath;
-			argv[1] = NULL;
-
-			child = fork();
-			if (child == -1)
-			{
-				perror("fork");
-			}
-			else if (child == 0)
-			{
-				printf("patth: %s\n", fullPath);
-				execve(fullPath, argv, NULL);
-				perror("execve");
-				_exit(EXIT_FAILURE);
-			}
-			else
-			{
-				int status;
-
-				while (waitpid(child, &status, 0) != child)
-				{
-					if (errno != EINTR)
-					{
-						perror("waitpid");
-						break;
-					}
-				}
-			}
-		}
-		else
-		{
-			printf("command not found: %s\n", command);
-		}
+    if (execve(args[0], args, NULL) == -1) {
+        perror("execve");
+        exit(EXIT_FAILURE);
+    }
 }
-	return (0);
+
+void run_shell(void) {
+    char command[MAX_COMMAND_LENGTH];
+    pid_t pid;
+
+    while (1) {
+        printf("($) ");
+        fflush(stdout);
+
+        if (fgets(command, sizeof(command), stdin) == NULL) {
+       
+            printf("\n");
+            break;
+        }
+
+        command[strcspn(command, "\n")] = '\0';
+
+        pid = fork();
+        if (pid < 0) {
+            perror("fork");
+            exit(EXIT_FAILURE);
+        } else if (pid == 0) {
+            execute_command(command);
+        } else {
+            wait(NULL);
+        }
+    }
 }
