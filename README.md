@@ -5,4 +5,4 @@ Basics of C
 Basics of thinking like an engineer
 Group work
 and Learning how to learing
-For this project, you will be developing a simple shell using c programming language.
+For this project, you will be developing a simple shell using c programming language. Simplified!
